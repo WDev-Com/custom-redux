@@ -1,0 +1,4 @@
+node_modules/
+# pnpm-lock.yaml  # For pnpm
+# package-lock.json  # For npm
+# yarn.lock        # For yarn
