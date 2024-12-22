@@ -1,5 +1,5 @@
-const createStore = (initialState, reducer) => {
-  const state = initialState;
+const createStore = (/*initialState, */ reducer) => {
+  let state = reducer(undefined, { type: "@@INIT" });
   const subcribers = [];
 
   const getState = () => {
@@ -7,7 +7,7 @@ const createStore = (initialState, reducer) => {
   };
 
   const dispatch = (action) => {
-    reducer(state, action);
+    state = reducer(state, action);
     subcribers.forEach((callBack) => {
       callBack();
     });
@@ -55,8 +55,6 @@ They subscribe to the store and react to changes, improving modularity.
 Reactivity:
 
 When the state changes, all subscribers get notified. In your case:
-jsx
-Copy code
 const unsubcribe = store.subscribe(() => {
   setSelected(store.getState().isThemeDark);
 });
@@ -82,8 +80,7 @@ A user toggles the theme using the ToggleButton.
 The dispatch function is called with the CHANGE_THEME action.
 The reducer modifies the isThemeDark property of the state.
 The dispatch function invokes all subscriber callbacks, including:
-jsx
-Copy code
+
 setSelected(store.getState().isThemeDark);
 This updates the selected state in the component.
 The UI re-renders to reflect the updated state.
@@ -91,8 +88,7 @@ Potential Improvements
 Immutability:
 
 Your reducer directly mutates the state. Instead, return a new state object:
-js
-Copy code
+
 const reducer = (state, action) => {
   switch (action.type) {
     case CHANGE_THEME:
@@ -103,6 +99,8 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
+
 Error Handling:
 
 Ensure dispatch validates actions before processing.
